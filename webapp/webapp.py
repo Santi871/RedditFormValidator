@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request
+from flask import Flask, redirect, request, Response
 from webapp import utils
 import praw
 import datetime
@@ -16,14 +16,17 @@ r.set_oauth_app_info(REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET, REDIRECT_URI)
 @app.route('/auth')
 def oauth():
     url = r.get_authorize_url('uniqueKey')
-
     return redirect(url, code=302)
 
 
 @app.route('/authorize_callback')
 def authorized():
     code = request.args.get('code', ' ')
-    r.get_access_information(code)
+
+    try:
+        r.get_access_information(code)
+    except praw.errors.OAuthInvalidGrant:
+        return Response(), 403
 
     user = r.get_me()
     name = user.name
