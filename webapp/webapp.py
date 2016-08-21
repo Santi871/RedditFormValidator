@@ -1,6 +1,7 @@
 from flask import Flask, redirect, request
 from webapp import utils
 import praw
+import datetime
 
 REDDIT_CLIENT_ID = utils.get_token("REDDIT_CLIENT_ID")
 REDDIT_CLIENT_SECRET = utils.get_token("REDDIT_CLIENT_SECRET")
@@ -26,9 +27,10 @@ def authorized():
 
     user = r.get_me()
     name = user.name
+    now = datetime.datetime.now()
 
     with open("authorized_users", "a+") as text_file:
-        text_file.write(name + '\n')
+        text_file.write(name + "    " + now.strftime("%Y-%m-%d %H:%M") + '\n')
 
     url = FORM_PREFILLED_URL_TEMPLATE + name
     return redirect(url, code=302)
