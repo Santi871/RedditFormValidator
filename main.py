@@ -1,4 +1,4 @@
 from webapp.webapp import app
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=4923)
+    app.run(host='0.0.0.0', port=4923, threaded=True)
