@@ -26,7 +26,12 @@ def oauth():
 @app.route('/authorize_callback')
 def authorized():
     code = request.args.get('code', ' ')
-    split_ids = ip_form_ids[request.remote_addr].split(',')
+
+    try:
+        split_ids = ip_form_ids[request.remote_addr].split(',')
+    except KeyError:
+        return "There was an error processing your request, please try again..."
+
     ip_form_ids.pop(request.remote_addr, None)
     form_id = split_ids[0]
     field_id = split_ids[1]
